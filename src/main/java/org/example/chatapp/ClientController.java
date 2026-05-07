@@ -30,13 +30,14 @@ public class ClientController {
     }
 
     public void initialize() {
-        try {
-             remoteSocket = new Socket("127.0.0.1", 4000);
+        new Thread(() -> {
+            try {
+                remoteSocket = new Socket("127.0.0.1", 4000);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
 }

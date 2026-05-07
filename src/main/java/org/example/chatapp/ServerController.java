@@ -6,12 +6,18 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerController {
 
+    ServerSocket serverSocket;
+    Socket localSocket;
+    DataInputStream dataInputStream;
+    DataOutputStream dataOutputStream;
+    String message="";
     @FXML
     private TextArea txtArea;
 
@@ -24,15 +30,22 @@ public class ServerController {
     }
 
     public void initialize() {
-        try {
-            ServerSocket serverSocket = new ServerSocket(4000);
-            Socket localSocket=serverSocket.accept();
-            DataInputStream dataInputStream
-                    =new DataInputStream(localSocket.getInputStream());
-            txtArea.appendText(dataInputStream.readUTF());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(() -> {
+            try {
+                 serverSocket = new ServerSocket(4000);
+                 txtArea.appendText("Waiting for client...\n");
+                 localSocket=serverSocket.accept();
+                 txtArea.appendText("Client connected...\n");
+                 dataInputStream =new DataInputStream(localSocket.getInputStream());
+                 while (!message.equals("exit")) {
+                     message=dataInputStream.readUTF();
+                     txtArea.appendText("client : " + message + "\n");
+                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
 
     }
 
