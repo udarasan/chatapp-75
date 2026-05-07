@@ -14,6 +14,7 @@ import java.net.Socket;
 public class ClientController {
 
     DataOutputStream dataOutputStream;
+    DataInputStream dataInputStream;
     String message="";
     Socket remoteSocket;
     @FXML
@@ -33,6 +34,11 @@ public class ClientController {
         new Thread(() -> {
             try {
                 remoteSocket = new Socket("127.0.0.1", 4000);
+                dataInputStream = new DataInputStream(remoteSocket.getInputStream());
+                while (!message.equals("finished")) {
+                    message = dataInputStream.readUTF();
+                    txtArea.appendText("server : "+message +"\n");
+                }
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

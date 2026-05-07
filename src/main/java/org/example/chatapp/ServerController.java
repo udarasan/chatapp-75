@@ -25,8 +25,10 @@ public class ServerController {
     private TextField txtMessage;
 
     @FXML
-    void sendOnAction(ActionEvent event) {
-
+    void sendOnAction(ActionEvent event) throws IOException {
+        dataOutputStream = new DataOutputStream(localSocket.getOutputStream());
+        dataOutputStream.writeUTF(txtMessage.getText());
+        dataOutputStream.flush();
     }
 
     public void initialize() {
