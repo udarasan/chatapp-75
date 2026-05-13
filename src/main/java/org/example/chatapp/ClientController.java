@@ -37,7 +37,9 @@ public class ClientController {
                 dataInputStream = new DataInputStream(remoteSocket.getInputStream());
                 while (!message.equals("finished")) {
                     message = dataInputStream.readUTF();
-                    txtArea.appendText("server : "+message +"\n");
+                    javafx.application.Platform.runLater(() -> {
+                        txtArea.appendText("server : " + message + "\n");
+                    });
                 }
 
             } catch (IOException e) {
